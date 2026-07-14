@@ -12,7 +12,11 @@ if (loginForm) {
         statusBox.textContent = 'Connexion réussie';
       })
       .catch((error) => {
-        statusBox.textContent = error.message;
+        console.error('Login error:', error);
+        const message = error && error.message ? error.message : 'Erreur inconnue';
+        const code = error && error.code ? error.code : 'unknown';
+        statusBox.textContent = `Erreur ${code}: ${message}`;
+        console.log('Firebase config used:', firebase.app().options);
       });
   });
 }

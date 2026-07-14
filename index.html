@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Score • Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #07111f;
+        --panel: rgba(10, 20, 35, 0.92);
+        --accent: #00d7ff;
+        --accent-2: #ff4f9b;
+        --text: #f7f8fc;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, sans-serif;
+        background: linear-gradient(135deg, var(--bg), #111f35);
+        color: var(--text);
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .card {
+        width: min(460px, 100%);
+        background: var(--panel);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+      h1 { font-family: 'Shrikhand', cursive; margin-top: 0; font-size: 2rem; }
+      form { display: grid; gap: 12px; margin-top: 20px; }
+      input, button { border-radius: 12px; padding: 13px 14px; border: none; font-size: 1rem; }
+      input { background: rgba(255,255,255,0.08); color: var(--text); }
+      button { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; font-weight: 700; cursor: pointer; }
+      .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+      .links a { color: var(--accent); text-decoration: none; font-weight: 600; }
+      .status { margin-top: 10px; color: #ffd869; min-height: 1.2em; }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Event Score</h1>
+      <p>Connexion administrateur pour piloter le classement et l’overlay OBS.</p>
+      <form id="login-form">
+        <input id="email" type="email" placeholder="Email administrateur" required />
+        <input id="password" type="password" placeholder="Mot de passe" required />
+        <button type="submit">Se connecter</button>
+      </form>
+      <div id="status" class="status"></div>
+      <div class="links">
+        <a href="classement.html">Voir le classement public</a>
+        <a href="overlay.html">Voir l’overlay OBS</a>
+      </div>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>

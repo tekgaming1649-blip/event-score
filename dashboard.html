@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Score • Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/classement.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <div>
+          <h1>Event Score</h1>
+          <p>Contrôlez les scores, le classement et l’overlay OBS.</p>
+        </div>
+        <button id="logout-btn" class="ghost">Déconnexion</button>
+      </header>
+
+      <section class="grid two-col">
+        <article class="panel">
+          <h2>Gestion des streamers</h2>
+          <form id="streamer-form" class="stack">
+            <input id="streamer-name" placeholder="Nom du streamer" required />
+            <input id="streamer-score" type="number" placeholder="Score initial" value="0" />
+            <div class="actions">
+              <button type="submit" id="save-streamer">Ajouter / modifier</button>
+              <button type="button" id="clear-form" class="ghost">Effacer</button>
+            </div>
+          </form>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Streamer</th><th>Score</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="streamer-list"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Contrôle du score</h2>
+          <label for="selected-streamer">Streamer actif</label>
+          <select id="selected-streamer"></select>
+          <div class="score-card">
+            <div class="score-label">Score actuel</div>
+            <div id="current-score" class="score-value">0</div>
+          </div>
+          <div class="btn-grid">
+            <button data-action="add" data-value="10">+10</button>
+            <button data-action="add" data-value="20">+20</button>
+            <button data-action="add" data-value="30">+30</button>
+            <button data-action="add" data-value="50">+50</button>
+            <button data-action="add" data-value="100">+100</button>
+            <button data-action="sub" data-value="10">-10</button>
+            <button data-action="sub" data-value="20">-20</button>
+            <button data-action="sub" data-value="30">-30</button>
+            <button data-action="sub" data-value="50">-50</button>
+            <button data-action="sub" data-value="100">-100</button>
+          </div>
+          <div class="inline-form">
+            <input id="set-score-input" type="number" placeholder="Définir un score" />
+            <button id="set-score-btn">Définir</button>
+          </div>
+          <div class="actions">
+            <button id="reset-btn" class="ghost">Reset</button>
+            <button id="obs-link-btn">Générer un lien OBS</button>
+          </div>
+          <div id="obs-link" class="obs-link"></div>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h2>Classement en temps réel</h2>
+        <div id="ranking-list" class="ranking-list"></div>
+      </section>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

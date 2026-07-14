@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Score • Overlay OBS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/overlay.css" />
+  </head>
+  <body>
+    <main class="overlay-shell">
+      <div id="overlay-card" class="overlay-card">
+        <div class="pill">OBS LIVE</div>
+        <div id="overlay-name" class="streamer-name">Streamer</div>
+        <div id="overlay-score" class="score-value">0</div>
+        <div class="subtle">Classement en temps réel</div>
+      </div>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/overlay.js"></script>
+  </body>
+</html>

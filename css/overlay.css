@@ -1,0 +1,39 @@
+:root { color-scheme: dark; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: transparent;
+  overflow: hidden;
+  font-family: Inter, system-ui, sans-serif;
+}
+.overlay-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: transparent;
+}
+.overlay-card {
+  display: grid;
+  gap: 10px;
+  padding: 24px 32px;
+  border-radius: 20px;
+  background: rgba(7, 17, 31, 0.82);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  min-width: 320px;
+  text-align: center;
+  color: #f7f8fc;
+}
+.pill { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.2em; color: #7ce8ff; }
+.streamer-name { font-family: 'Shrikhand', cursive; font-size: 2rem; }
+.score-value { font-family: 'Shrikhand', cursive; font-size: 3rem; color: #ffd869; }
+.score-value.animate {
+  animation: score-rise 0.4s ease;
+}
+.subtle { color: #9ca6be; }
+
+@keyframes score-rise {
+  0% { transform: translateY(8px); opacity: 0.3; }
+  100% { transform: translateY(0); opacity: 1; }
+}

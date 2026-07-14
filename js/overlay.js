@@ -1,11 +1,9 @@
 const params = new URLSearchParams(window.location.search);
 const selectedId = params.get('streamer') || '';
-const overlayName = document.getElementById('overlay-name');
 const overlayScore = document.getElementById('overlay-score');
 
 function updateOverlay(streamer) {
   if (!streamer) return;
-  overlayName.textContent = streamer.name;
   overlayScore.classList.remove('animate');
   void overlayScore.offsetWidth;
   overlayScore.textContent = streamer.score;

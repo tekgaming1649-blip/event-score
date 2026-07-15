@@ -74,7 +74,12 @@ function updateCurrentScore() {
 function renderRanking() {
   if (!rankingList) return;
   const sorted = [...streamers].sort((a, b) => b.score - a.score);
+  const total = streamers.reduce((sum, streamer) => sum + sanitizeScore(streamer.score), 0);
   rankingList.innerHTML = '';
+  const totalItem = document.createElement('div');
+  totalItem.className = 'rank-item';
+  totalItem.innerHTML = `<div><strong>Total général</strong></div><div class="score">${total}</div>`;
+  rankingList.appendChild(totalItem);
   sorted.forEach((streamer, index) => {
     const item = document.createElement('div');
     item.className = 'rank-item';

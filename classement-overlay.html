@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Event Score • Overlay Classement</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Shrikhand&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/overlay.css" />
+    <style>
+      body { background: transparent; }
+      .overlay-shell { justify-content: center; align-items: center; }
+      .overlay-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 24px 32px;
+        border-radius: 18px;
+        background: rgba(7, 17, 31, 0.75);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.28);
+        min-width: 360px;
+      }
+      .overlay-title {
+        font-family: 'Shrikhand', cursive;
+        font-size: 1.2rem;
+        color: #7ce8ff;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+      }
+      .overlay-total {
+        font-family: 'Shrikhand', cursive;
+        font-size: 2.8rem;
+        color: #ffd869;
+      }
+      .overlay-list {
+        display: grid;
+        gap: 6px;
+        color: #f7f8fc;
+        font-size: 1rem;
+      }
+      .overlay-list span { display: flex; justify-content: space-between; gap: 12px; }
+    </style>
+  </head>
+  <body>
+    <main class="overlay-shell">
+      <div id="overlay-card" class="overlay-card">
+        <div class="overlay-title">Classement</div>
+        <div id="overlay-total" class="overlay-total">0</div>
+        <div id="overlay-list" class="overlay-list"></div>
+      </div>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
+    <script src="js/firebase.js?v=20260714"></script>
+    <script>
+      const totalEl = document.getElementById('overlay-total');
+      const listEl = document.getElementById('overlay-list');
+      database.ref('streamers').on('value', (snapshot) => {
+        const values = snapshot.val() || {};
+        const streamers = Object.entries(values).map(([id, value]) => ({ id, ...value }));
+        const sorted = [...streamers].sort((a, b) => b.score - a.score);
+        const total = streamers.reduce((sum, item) => sum + Number(item.score || 0), 0);
+        totalEl.textContent = total;
+        listEl.innerHTML = '';
+        sorted.slice(0, 5).forEach((streamer, index) => {
+          const row = document.createElement('div');
+          row.innerHTML = `<span><strong>#${index + 1} ${streamer.name}</strong><span>${streamer.score}</span></span>`;
+          listEl.appendChild(row);
+        });
+      });
+    </script>
+  </body>
+</html>

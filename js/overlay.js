@@ -1,5 +1,6 @@
 const params = new URLSearchParams(window.location.search);
 const selectedId = params.get('streamer') || '';
+const mode = params.get('mode') || '';
 const overlayScore = document.getElementById('overlay-score');
 
 function updateOverlay(streamer) {
@@ -10,7 +11,14 @@ function updateOverlay(streamer) {
   overlayScore.classList.add('animate');
 }
 
-if (selectedId) {
+if (mode === 'total') {
+  database.ref('streamers').on('value', (snapshot) => {
+    const values = snapshot.val() || {};
+    const streamers = Object.entries(values).map(([id, value]) => ({ id, ...value }));
+    const total = streamers.reduce((sum, streamer) => sum + Number(streamer.score || 0), 0);
+    updateOverlay({ score: total });
+  });
+} else if (selectedId) {
   database.ref('streamers').child(selectedId).on('value', (snapshot) => {
     const value = snapshot.val();
     if (value) {

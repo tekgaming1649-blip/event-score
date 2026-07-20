@@ -12,6 +12,7 @@ const resetBtn = document.getElementById('reset-btn');
 const setScoreBtn = document.getElementById('set-score-btn');
 const setScoreInput = document.getElementById('set-score-input');
 const obsLinkBtn = document.getElementById('obs-link-btn');
+const totalObsLinkBtn = document.getElementById('total-obs-link-btn');
 
 let streamers = [];
 let editingId = null;
@@ -188,6 +189,13 @@ if (resetBtn) {
 if (obsLinkBtn) {
   obsLinkBtn.addEventListener('click', () => {
     const url = `${window.location.origin}/overlay.html?streamer=${encodeURIComponent(selectedStreamerId || '')}`;
+    obsLinkEl.textContent = url;
+  });
+}
+
+if (totalObsLinkBtn) {
+  totalObsLinkBtn.addEventListener('click', () => {
+    const url = `${window.location.origin}/overlay.html?mode=total`;
     obsLinkEl.textContent = url;
   });
 }

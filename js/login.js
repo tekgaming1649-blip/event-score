@@ -1,9 +1,28 @@
 const AUTHORIZED_EMAIL = 'adminsummerevent@gmail.com';
+const ADMIN_ACCESS_KEY = 'admin123'; // Simple admin key
 let isAuthenticationInProgress = false;
 
-// Wait for DOM to be ready
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLogin);
+} else {
+  initLogin();
+}
+
+function initLogin() {
+  // Check if Firebase is ready
+  if (typeof auth === 'undefined') {
+    console.warn('Firebase not yet loaded, retrying in 500ms...');
+    setTimeout(initLogin, 500);
+    return;
+  }
+  
+  initGoogleSignIn();
+  initAdminForm();
+}
+
+// ============ GOOGLE SIGN-IN ============
 function initGoogleSignIn() {
-  const statusBox = document.getElementById('status');
   const googleSignInContainer = document.getElementById('google-signin-container');
   
   if (!googleSignInContainer) {
@@ -11,7 +30,6 @@ function initGoogleSignIn() {
     return;
   }
   
-  // Create custom Google Sign-In button
   const googleButton = document.createElement('button');
   googleButton.innerHTML = '🔐 Se connecter avec Google';
   googleButton.style.width = '100%';
@@ -26,22 +44,15 @@ function initGoogleSignIn() {
   googleButton.style.marginTop = '20px';
   googleButton.type = 'button';
   googleButton.id = 'google-signin-btn';
-  googleButton.onclick = (e) => handleGoogleSignIn(e, statusBox, googleButton);
+  googleButton.onclick = (e) => handleGoogleSignIn(e, googleButton);
   
   googleSignInContainer.appendChild(googleButton);
 }
 
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initGoogleSignIn);
-} else {
-  initGoogleSignIn();
-}
-
-function handleGoogleSignIn(e, statusBox, googleButton) {
+function handleGoogleSignIn(e, googleButton) {
   e.preventDefault();
   
-  if (isAuthenticationInProgress) {
+  if (isAuthenticationInProgress || typeof auth === 'undefined') {
     return;
   }
   
@@ -49,6 +60,7 @@ function handleGoogleSignIn(e, statusBox, googleButton) {
   googleButton.disabled = true;
   googleButton.style.opacity = '0.6';
   
+  const statusBox = document.getElementById('status');
   const provider = new firebase.auth.GoogleAuthProvider();
   provider.setCustomParameters({ prompt: 'select_account' });
   
@@ -61,12 +73,10 @@ function handleGoogleSignIn(e, statusBox, googleButton) {
       
       console.log('User email:', user.email, 'Authorized email:', AUTHORIZED_EMAIL);
       
-      // Verify email is authorized
       if (user.email !== AUTHORIZED_EMAIL) {
-        statusBox.textContent = `❌ Accès refusé. Seul ${AUTHORIZED_EMAIL} peut se connecter. Vous avez utilisé: ${user.email}`;
+        statusBox.textContent = `❌ Accès refusé. Vous avez utilisé: ${user.email}`;
         statusBox.style.color = '#ff6b6b';
         
-        // Sign out the unauthorized user immediately
         auth.signOut().then(() => {
           isAuthenticationInProgress = false;
           googleButton.disabled = false;
@@ -75,28 +85,82 @@ function handleGoogleSignIn(e, statusBox, googleButton) {
         return;
       }
       
-      // User is authorized - connection is successful
-      statusBox.textContent = '✅ Connexion réussie - Redirection en cours...';
+      statusBox.textContent = '✅ Connexion réussie - Redirection...';
       statusBox.style.color = '#4ade80';
-      
-      // Redirect will be handled by auth.js onAuthStateChanged
     })
     .catch((error) => {
       isAuthenticationInProgress = false;
       googleButton.disabled = false;
       googleButton.style.opacity = '1';
       
-      console.error('Login error:', error);
-      const message = error && error.message ? error.message : 'Erreur inconnue';
-      const code = error && error.code ? error.code : 'unknown';
+      console.error('Google login error:', error);
+      statusBox.textContent = '⚠️ Google Sign-in non disponible - utilisez le formulaire ci-dessous';
+      statusBox.style.color = '#ff9500';
       
-      // Handle specific error codes
-      if (code === 'auth/popup-closed-by-user') {
-        statusBox.textContent = '❌ Connexion annulée';
-      } else {
-        statusBox.textContent = `❌ Erreur ${code}: ${message}`;
-      }
+      // Show admin form as fallback
+      document.getElementById('admin-form').style.display = 'grid';
+    });
+}
+
+// ============ ADMIN FORM (FALLBACK) ============
+function initAdminForm() {
+  const adminForm = document.getElementById('admin-form');
+  
+  if (!adminForm) {
+    console.error('admin-form not found');
+    return;
+  }
+  
+  adminForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleAdminFormSubmit();
+  });
+}
+
+function handleAdminFormSubmit() {
+  const email = document.getElementById('admin-email').value.trim();
+  const key = document.getElementById('admin-key').value;
+  const statusBox = document.getElementById('status');
+  const submitBtn = document.querySelector('#admin-form button');
+  
+  submitBtn.disabled = true;
+  statusBox.textContent = '⏳ Vérification...';
+  statusBox.style.color = '#ffd869';
+  
+  // Verify email and key
+  if (email !== AUTHORIZED_EMAIL) {
+    statusBox.textContent = `❌ Email incorrect. Utilisez: ${AUTHORIZED_EMAIL}`;
+    statusBox.style.color = '#ff6b6b';
+    submitBtn.disabled = false;
+    return;
+  }
+  
+  if (key !== ADMIN_ACCESS_KEY) {
+    statusBox.textContent = '❌ Clé d\'accès incorrecte';
+    statusBox.style.color = '#ff6b6b';
+    submitBtn.disabled = false;
+    return;
+  }
+  
+  // Authentication successful with admin credentials
+  auth.signInAnonymously()
+    .then(() => {
+      // Override user email for consistency
+      auth.currentUser.email = AUTHORIZED_EMAIL;
+      
+      statusBox.textContent = '✅ Connexion réussie - Redirection...';
+      statusBox.style.color = '#4ade80';
+      
+      // Manually trigger redirect since anonymous auth won't trigger onAuthStateChanged redirect
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 500);
+    })
+    .catch((error) => {
+      console.error('Admin auth error:', error);
+      statusBox.textContent = '❌ Erreur de connexion';
       statusBox.style.color = '#ff6b6b';
+      submitBtn.disabled = false;
     });
 }
       } else {

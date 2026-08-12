@@ -1,4 +1,4 @@
-const AUTHORIZED_EMAIL = 'admin@summerevent.fr';
+const AUTHORIZED_EMAIL = 'adminsummerevent@gmail.com';
 
 function isAdminAuthenticated() {
   return !!auth.currentUser && auth.currentUser.email === AUTHORIZED_EMAIL;

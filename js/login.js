@@ -1,25 +1,41 @@
-const AUTHORIZED_EMAIL = 'admin@summerevent.fr';
-const statusBox = document.getElementById('status');
-const googleSignInContainer = document.getElementById('google-signin-container');
+const AUTHORIZED_EMAIL = 'adminsummerevent@gmail.com';
 
-// Create custom Google Sign-In button
-const googleButton = document.createElement('button');
-googleButton.innerHTML = '🔐 Se connecter avec Google';
-googleButton.style.width = '100%';
-googleButton.style.padding = '13px 14px';
-googleButton.style.borderRadius = '12px';
-googleButton.style.border = 'none';
-googleButton.style.fontSize = '1rem';
-googleButton.style.fontWeight = '700';
-googleButton.style.background = 'linear-gradient(90deg, #00d7ff, #ff4f9b)';
-googleButton.style.color = 'white';
-googleButton.style.cursor = 'pointer';
-googleButton.style.marginTop = '20px';
-googleButton.onclick = handleGoogleSignIn;
+// Wait for DOM to be ready
+function initGoogleSignIn() {
+  const statusBox = document.getElementById('status');
+  const googleSignInContainer = document.getElementById('google-signin-container');
+  
+  if (!googleSignInContainer) {
+    console.error('google-signin-container not found');
+    return;
+  }
+  
+  // Create custom Google Sign-In button
+  const googleButton = document.createElement('button');
+  googleButton.innerHTML = '🔐 Se connecter avec Google';
+  googleButton.style.width = '100%';
+  googleButton.style.padding = '13px 14px';
+  googleButton.style.borderRadius = '12px';
+  googleButton.style.border = 'none';
+  googleButton.style.fontSize = '1rem';
+  googleButton.style.fontWeight = '700';
+  googleButton.style.background = 'linear-gradient(90deg, #00d7ff, #ff4f9b)';
+  googleButton.style.color = 'white';
+  googleButton.style.cursor = 'pointer';
+  googleButton.style.marginTop = '20px';
+  googleButton.onclick = (e) => handleGoogleSignIn(e, statusBox);
+  
+  googleSignInContainer.appendChild(googleButton);
+}
 
-googleSignInContainer.appendChild(googleButton);
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGoogleSignIn);
+} else {
+  initGoogleSignIn();
+}
 
-function handleGoogleSignIn(e) {
+function handleGoogleSignIn(e, statusBox) {
   e.preventDefault();
   
   const provider = new firebase.auth.GoogleAuthProvider();

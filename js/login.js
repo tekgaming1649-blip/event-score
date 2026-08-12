@@ -1,4 +1,5 @@
 const AUTHORIZED_EMAIL = 'adminsummerevent@gmail.com';
+let isAuthenticationInProgress = false;
 
 // Wait for DOM to be ready
 function initGoogleSignIn() {
@@ -23,7 +24,9 @@ function initGoogleSignIn() {
   googleButton.style.color = 'white';
   googleButton.style.cursor = 'pointer';
   googleButton.style.marginTop = '20px';
-  googleButton.onclick = (e) => handleGoogleSignIn(e, statusBox);
+  googleButton.type = 'button';
+  googleButton.id = 'google-signin-btn';
+  googleButton.onclick = (e) => handleGoogleSignIn(e, statusBox, googleButton);
   
   googleSignInContainer.appendChild(googleButton);
 }
@@ -35,39 +38,67 @@ if (document.readyState === 'loading') {
   initGoogleSignIn();
 }
 
-function handleGoogleSignIn(e, statusBox) {
+function handleGoogleSignIn(e, statusBox, googleButton) {
   e.preventDefault();
   
-  const provider = new firebase.auth.GoogleAuthProvider();
+  if (isAuthenticationInProgress) {
+    return;
+  }
   
-  statusBox.textContent = 'Redirection vers Google...';
+  isAuthenticationInProgress = true;
+  googleButton.disabled = true;
+  googleButton.style.opacity = '0.6';
+  
+  const provider = new firebase.auth.GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: 'select_account' });
+  
+  statusBox.textContent = '⏳ Redirection vers Google...';
   statusBox.style.color = '#ffd869';
   
   auth.signInWithPopup(provider)
     .then((result) => {
       const user = result.user;
       
+      console.log('User email:', user.email, 'Authorized email:', AUTHORIZED_EMAIL);
+      
       // Verify email is authorized
       if (user.email !== AUTHORIZED_EMAIL) {
-        statusBox.textContent = `❌ Accès refusé. Seul ${AUTHORIZED_EMAIL} peut se connecter.`;
+        statusBox.textContent = `❌ Accès refusé. Seul ${AUTHORIZED_EMAIL} peut se connecter. Vous avez utilisé: ${user.email}`;
         statusBox.style.color = '#ff6b6b';
         
-        // Sign out the unauthorized user
-        auth.signOut();
+        // Sign out the unauthorized user immediately
+        auth.signOut().then(() => {
+          isAuthenticationInProgress = false;
+          googleButton.disabled = false;
+          googleButton.style.opacity = '1';
+        });
         return;
       }
       
-      statusBox.textContent = '✅ Connexion réussie';
+      // User is authorized - connection is successful
+      statusBox.textContent = '✅ Connexion réussie - Redirection en cours...';
       statusBox.style.color = '#4ade80';
+      
+      // Redirect will be handled by auth.js onAuthStateChanged
     })
     .catch((error) => {
+      isAuthenticationInProgress = false;
+      googleButton.disabled = false;
+      googleButton.style.opacity = '1';
+      
       console.error('Login error:', error);
       const message = error && error.message ? error.message : 'Erreur inconnue';
       const code = error && error.code ? error.code : 'unknown';
       
       // Handle specific error codes
       if (code === 'auth/popup-closed-by-user') {
-        statusBox.textContent = 'Connexion annulée';
+        statusBox.textContent = '❌ Connexion annulée';
+      } else {
+        statusBox.textContent = `❌ Erreur ${code}: ${message}`;
+      }
+      statusBox.style.color = '#ff6b6b';
+    });
+}
       } else {
         statusBox.textContent = `❌ Erreur ${code}: ${message}`;
       }

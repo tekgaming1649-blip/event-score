@@ -43,17 +43,14 @@
       .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
       .links a { color: var(--accent); text-decoration: none; font-weight: 600; }
       .status { margin-top: 10px; color: #ffd869; min-height: 1.2em; }
+      #google-signin-container { margin-top: 20px; }
     </style>
   </head>
   <body>
     <main class="card">
       <h1>Event Score</h1>
       <p>Connexion administrateur pour piloter le classement et l’overlay OBS.</p>
-      <form id="login-form">
-        <input id="email" type="email" placeholder="Email administrateur" required />
-        <input id="password" type="password" placeholder="Mot de passe" required />
-        <button type="submit">Se connecter</button>
-      </form>
+      <div id="google-signin-container"></div>
       <div id="status" class="status"></div>
       <div class="links">
         <a href="classement.html">Voir le classement public</a>

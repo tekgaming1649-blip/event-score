@@ -1,5 +1,7 @@
+const AUTHORIZED_EMAIL = 'admin@summerevent.fr';
+
 function isAdminAuthenticated() {
-  return !!auth.currentUser;
+  return !!auth.currentUser && auth.currentUser.email === AUTHORIZED_EMAIL;
 }
 
 function redirectIfNeeded() {
@@ -20,8 +22,17 @@ function logoutAdmin() {
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/')) {
-      window.location.href = 'dashboard.html';
+    // Verify user has authorized email
+    if (user.email === AUTHORIZED_EMAIL) {
+      if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/')) {
+        window.location.href = 'dashboard.html';
+      }
+    } else {
+      // Unauthorized user - sign them out
+      console.warn(`Unauthorized access attempt from ${user.email}`);
+      auth.signOut().then(() => {
+        window.location.href = 'index.html';
+      });
     }
   } else {
     redirectIfNeeded();

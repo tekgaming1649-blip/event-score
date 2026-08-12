@@ -17,5 +17,9 @@ try {
 
 const auth = firebase.auth();
 const database = firebase.database();
+
+// Enable Google as authentication provider
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
 window.firebaseAuthReady = true;
 console.log('Firebase initialized with authDomain:', firebaseConfig.authDomain);

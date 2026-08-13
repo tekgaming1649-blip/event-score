@@ -1,10 +1,19 @@
+window.EVENT_SCORE_ADMIN_SESSION_KEY = 'eventScoreAdminAuthenticated';
+
+function getAdminSessionKey() {
+  return window.EVENT_SCORE_ADMIN_SESSION_KEY || 'eventScoreAdminAuthenticated';
+}
+
 function isAdminAuthenticated() {
-  return !!auth.currentUser;
+  return localStorage.getItem(getAdminSessionKey()) === 'true';
 }
 
 function redirectIfNeeded() {
   const path = window.location.pathname.split('/').pop();
   if (path === 'index.html' || path === '') {
+    if (isAdminAuthenticated()) {
+      window.location.href = 'dashboard.html';
+    }
     return;
   }
   if (!isAdminAuthenticated()) {
@@ -13,17 +22,18 @@ function redirectIfNeeded() {
 }
 
 function logoutAdmin() {
-  auth.signOut().then(() => {
-    window.location.href = 'index.html';
-  });
+  localStorage.removeItem(getAdminSessionKey());
+  window.location.href = 'index.html';
 }
 
-auth.onAuthStateChanged((user) => {
-  if (user) {
+function initializeAdminSession() {
+  if (isAdminAuthenticated()) {
     if (window.location.pathname.includes('index.html') || window.location.pathname.endsWith('/')) {
       window.location.href = 'dashboard.html';
     }
   } else {
     redirectIfNeeded();
   }
-});
+}
+
+initializeAdminSession();

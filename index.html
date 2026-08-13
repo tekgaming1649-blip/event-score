@@ -43,32 +43,17 @@
       .links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
       .links a { color: var(--accent); text-decoration: none; font-weight: 600; }
       .status { margin-top: 10px; color: #ffd869; min-height: 1.2em; }
-      #google-signin-container { margin-top: 20px; display: flex; justify-content: center; }
-      #google-signin-container button { width: 100%; max-width: 100%; }
-      #admin-form { display: grid; gap: 12px; margin-top: 20px; }
-      #admin-form input, #admin-form button { border-radius: 12px; padding: 13px 14px; border: none; font-size: 1rem; }
-      #admin-form input { background: rgba(255,255,255,0.08); color: var(--text); }
-      #admin-form button { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; font-weight: 700; cursor: pointer; }
-      #admin-form button:hover { opacity: 0.9; }
-      #admin-form button:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
   </head>
   <body>
     <main class="card">
       <h1>Event Score</h1>
       <p>Connexion administrateur pour piloter le classement et l’overlay OBS.</p>
-      
-      <!-- Google Sign-In Container -->
-      <div id="google-signin-container"></div>
-      
-      <!-- Fallback Admin Form -->
-      <form id="admin-form" style="display: none; margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
-        <p style="margin: 0 0 15px 0; color: #00d7ff; font-size: 0.9rem;">Ou accédez directement en tant qu'admin</p>
-        <input id="admin-email" type="email" placeholder="Email" value="adminsummerevent@gmail.com" required />
-        <input id="admin-key" type="password" placeholder="Clé d'accès" required />
-        <button type="submit">Connexion Admin</button>
+      <form id="login-form">
+        <input id="email" type="email" placeholder="Email administrateur" required />
+        <input id="password" type="password" placeholder="Mot de passe" required />
+        <button type="submit">Se connecter</button>
       </form>
-      
       <div id="status" class="status"></div>
       <div class="links">
         <a href="classement.html">Voir le classement public</a>
@@ -78,8 +63,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database-compat.js"></script>
-    <script src="js/firebase.js?v=20260813"></script>
-    <script src="js/auth.js?v=20260813"></script>
-    <script src="js/login.js?v=20260813"></script>
+    <script src="js/firebase.js?v=20260714"></script>
+    <script src="js/auth.js?v=20260714"></script>
+    <script src="js/login.js?v=20260714"></script>
   </body>
 </html>

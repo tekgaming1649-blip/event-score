@@ -163,9 +163,3 @@ function handleAdminFormSubmit() {
       submitBtn.disabled = false;
     });
 }
-      } else {
-        statusBox.textContent = `❌ Erreur ${code}: ${message}`;
-      }
-      statusBox.style.color = '#ff6b6b';
-    });
-}

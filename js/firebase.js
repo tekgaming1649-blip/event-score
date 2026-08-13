@@ -126,14 +126,28 @@ const fallbackDatabase = {
 let auth = null;
 let database = fallbackDatabase;
 
-if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+const hasFirebaseConfig = typeof window !== 'undefined'
+  && window.FIREBASE_CONFIG
+  && window.FIREBASE_CONFIG.apiKey
+  && window.FIREBASE_CONFIG.databaseURL
+  && window.FIREBASE_CONFIG.projectId;
+
+if (typeof firebase !== 'undefined' && hasFirebaseConfig) {
+  if (!firebase.apps || firebase.apps.length === 0) {
+    firebase.initializeApp(window.FIREBASE_CONFIG);
+  }
   auth = firebase.auth();
   database = firebase.database();
   window.firebaseAuthReady = true;
   console.log('Firebase initialized successfully.');
+} else if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length) {
+  auth = firebase.auth();
+  database = firebase.database();
+  window.firebaseAuthReady = true;
+  console.log('Firebase already initialized with an existing app.');
 } else {
   window.firebaseAuthReady = false;
-  console.warn('Firebase indisponible : utilisation du stockage local pour les permissions et le score.');
+  console.warn('Firebase indisponible ou non configuré : utilisation du stockage local pour les permissions et le score.');
 }
 
 if (typeof window !== 'undefined') {
